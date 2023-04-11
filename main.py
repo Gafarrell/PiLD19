@@ -1,6 +1,6 @@
 import serial
 
-port = serial.Serial('dev/serial0', baudrate=230400, timeout=3.0, parity='N', stopbits=1)
+port = serial.Serial('/dev/serial0', baudrate=230400, timeout=3.0, parity='N', stopbits=1)
 
 
 class DataPoint:
@@ -56,7 +56,7 @@ class LidarFrame:
 
 # Main program loop here.
 while True:
-    frame = LidarFrame(port)
+    frame = LidarFrame()
     data_within_angle = frame.get_points_within_angles(0, 90)
     for point in data_within_angle:
         print(point)
