@@ -41,7 +41,9 @@ class LidarFrame:
 
     def get_points_within_angles(self, start, end):
         filtered_data = []
-        step = (self.end_angle - self.start_angle)/11  # Linearly interpolate the angle to get the angle per data point
+
+        # Linearly interpolate the angle to get the angle per data point
+        step = (self.end_angle - self.start_angle)/11.0
 
         for i in range(len(self.data_points)):
             angle = self.start_angle + (step*i)
