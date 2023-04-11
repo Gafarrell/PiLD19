@@ -9,7 +9,7 @@ class DataPoint:
         self.distance = int.from_bytes(port.read(2), "little")
         self.intensity = int.from_bytes(port.read(), "big")
 
-    def __str__(self):
+    def print(self):
         print('\tDistance: %d, Intensity: %d' % (self.distance, self.intensity))
 
 
@@ -29,7 +29,7 @@ class LidarFrame:
         self.timestamp = int.from_bytes(port.read(2), "little")
         self.crc8 = int.from_bytes(port.read(), "big")
 
-    def __str__(self):
+    def print(self):
         print('Speed: %d' % self.spd)
         print('Start Angle: %d' % self.start_angle)
         print('Data Points:')
@@ -59,4 +59,4 @@ while True:
     frame = LidarFrame()
     data_within_angle = frame.get_points_within_angles(0, 90)
     for point in data_within_angle:
-        print(point)
+        point.print()
