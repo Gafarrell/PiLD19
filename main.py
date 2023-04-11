@@ -47,10 +47,10 @@ class LidarFrame:
             angle = self.start_angle + (step*i)
             if start > end:
                 if start >= angle >= end:
-                    filtered_data.append(self.data_points[i])
+                    filtered_data.append([self.data_points[i], angle])
             else:
                 if start <= angle <= end:
-                    filtered_data.append(self.data_points[i])
+                    filtered_data.append([self.data_points[i], angle])
         return filtered_data
 
 
@@ -59,4 +59,5 @@ while True:
     frame = LidarFrame()
     data_within_angle = frame.get_points_within_angles(0, 90)
     for point in data_within_angle:
-        point.print()
+        point[0].print()
+        print('Detected at angle: %d' % point[1])
