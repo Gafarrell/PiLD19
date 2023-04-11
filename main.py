@@ -9,7 +9,7 @@ class DataPoint:
         self.distance = int.from_bytes(port.read(2), "little")
         self.intensity = int.from_bytes(port.read(), "big")
 
-    def print(self):
+    def __str__(self):
         print('\tDistance: %d, Intensity: %d' % (self.distance, self.intensity))
 
 
@@ -29,7 +29,7 @@ class LidarFrame:
         self.timestamp = int.from_bytes(port.read(2), "little")
         self.crc8 = int.from_bytes(port.read(), "big")
 
-    def print(self):
+    def __str__(self):
         print('Speed: %d' % self.spd)
         print('Start Angle: %d' % self.start_angle)
         print('Data Points:')
