@@ -24,7 +24,7 @@ class LidarFrame:
         self.start_angle = int.from_bytes(port.read(2), "little")/100.0
         self.data_points = []
         for i in range(12):
-            self.data_points.append(DataPoint(port))
+            self.data_points.append(DataPoint())
         self.end_angle = int.from_bytes(port.read(2), "little")/100.0
         self.timestamp = int.from_bytes(port.read(2), "little")
         self.crc8 = int.from_bytes(port.read(), "big")
