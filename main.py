@@ -107,29 +107,25 @@ try:
         
         for point in left_points:
             if point[0].distance <= thresh_dist:
-                if not object_left:
-                    print('Activating left module.')
                 object_left = True
                 break
             object_left = False
 
         for point in right_points:
             if point[0].distance <= thresh_dist:
-                if not object_right:
-                    print('Activating right module.')
                 object_right = True
                 break
             object_right = False
         
         for point in center_points:
             if point[0].distance <= thresh_dist:
-                if not object_center:
-                    print('Activating center module.')
                 object_center = True
                 break
             object_center = False
 
-        
+        print('Object left? %s' % str(object_left))
+        print('Object middle? %s' % str(object_right))
+        print('Object right? %s' % str(object_right))
 except KeyboardInterrupt:
     GPIO.cleanup()
 
