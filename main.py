@@ -1,5 +1,6 @@
 import serial
-
+from time import *
+import RPi.GPIO as GPIO
 
 port = serial.Serial('/dev/serial0', baudrate=230400, timeout=3.0, parity='N', stopbits=1)
 
@@ -77,31 +78,58 @@ class LidarFrame:
         
         return tuples
 
+# Starts GPIO pin #4 with constant output.
+GPIO.setmode(GPIO.BCM)
 
+GPIO.setup(4, GPIO.OUT)
+# Do the same setup for all other GPIO pins that are supposed to be used.
 
-# Main program loop here.
-while True:
-    frame = LidarFrame()
-    #The overall angle coverage is between 210 and 330 degrees
-    left_points = frame.get_points_within_angles(210, 250)
-    center_points  = frame.get_points_within_angles(251, 290)
-    right_points  = frame.get_points_within_angles(291, 330)
+try:
 
-    something_is_too_close = False
+    # CHANGE THESE TO THE CORRECT PINS WHEN THEY ARE ACTUALLY CONNECTED.
+    GPIO_PIN_LEFT = 4
+    GPIO_PIN_RIGHT = 5
+    GPIO_PIN_CENTER = 6
+
+    object_left = object_right = object_center = False
     
-    for point in left_points:
-        if point[0].distance <= 100:
-            print('BACK OFF LEFT PEASANT!')
-            something_is_too_close = True
-
-    for point in center_points:
-        if point[0].distance <= 100:
-            print('BACK OFF MIDDLE PEASANT!')
-            something_is_too_close = True
-
-    for point in right_points:
-        if point[0].distance <= 100:
-            print('BACK OFF RIGHT PEASANT!')
-            something_is_too_close = True
+    
+    # Main program loop here.
+    while True:
+        frame = LidarFrame()
         
+        #The overall angle coverage is between 210 and 330 degrees
+        left_points = frame.get_points_within_angles(210, 250)
+        center_points  = frame.get_points_within_angles(251, 290)
+        right_points  = frame.get_points_within_angles(291, 330)
+
+        thresh_dist = 50   #measured in milimeters
+        
+        for point in left_points:
+            if point[0].distance <= thresh_dist:
+                if not object_left:
+                    print('Activating left module.')
+                object_left = True
+                break
+            object_left = False
+
+        for point in right_points:
+            if point[0].distance <= thresh_dist:
+                if not object_right:
+                    print('Activating right module.')
+                object_right = True
+                break
+            object_right = False
+        
+        for point in center_points:
+            if point[0].distance <= thresh_dist:
+                if not object_center:
+                    print('Activating center module.')
+                object_center = True
+                break
+            object_center = False
+
+        
+except KeyboardInterrupt:
+    GPIO.cleanup()
 
