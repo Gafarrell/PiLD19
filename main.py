@@ -131,9 +131,9 @@ try:
     while True:
         frame = LidarFrame()
 
-        motor_left.update_data(frame)
-        motor_middle.update_data(frame)
-        motor_right.update_data(frame)
+        motor_left.update_data(frame.get_points_and_angles())
+        motor_middle.update_data(frame.get_points_and_angles())
+        motor_right.update_data(frame.get_points_and_angles())
 
         print(motor_left)
 
