@@ -35,7 +35,7 @@ class VibrationMotorRangeLink:
     def __str__(self) -> str:
         string = ""
         for key in self.points.keys():
-            string += "%d: %d\n" % (key, self.points[key])
+            string += "{key}: {point}\n".format(key=key, point=self.points[key])
 
 class DataPoint:
 
