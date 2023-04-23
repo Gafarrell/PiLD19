@@ -4,6 +4,26 @@ import RPi.GPIO as GPIO
 
 port = serial.Serial('/dev/serial0', baudrate=230400, timeout=3.0, parity='N', stopbits=1)
 
+class VibrationMotorLink:
+    def __init__(self, port, threshold, name):
+        GPIO.setup(port, GPIO.OUT)
+        self._active = False
+        self._threshold = threshold
+        self._name = name
+
+    def update_data(self, data_points):
+        object_detected = False
+        for point in data_points:
+            if point[0].distance <= self._threshold:
+                object_detected = True
+                break
+            object_detected = False
+        
+        if object_detected == self._active:
+            return
+        
+        self._active = object_detected
+        print('%d vibration motor %s' % ("Activating" if self._active else "Deactivating", self._name))
 
 class DataPoint:
 
@@ -87,11 +107,9 @@ GPIO.setup(4, GPIO.OUT)
 try:
 
     # CHANGE THESE TO THE CORRECT PINS WHEN THEY ARE ACTUALLY CONNECTED.
-    GPIO_PIN_LEFT = 4
-    GPIO_PIN_RIGHT = 5
-    GPIO_PIN_CENTER = 6
-
-    object_left = object_right = object_center = False
+    motor_left = VibrationMotorLink(4, 50, "Left")
+    motor_middle = VibrationMotorLink(5, 50, "Middle")
+    motor_right = VibrationMotorLink(6, 50, "Right")
     
     
     # Main program loop here.
@@ -103,29 +121,10 @@ try:
         center_points  = frame.get_points_within_angles(251, 290)
         right_points  = frame.get_points_within_angles(291, 330)
 
-        thresh_dist = 50   #measured in milimeters
-        
-        for point in left_points:
-            if point[0].distance <= thresh_dist:
-                object_left = True
-                break
-            object_left = False
+        motor_left.update_data(left_points)
+        motor_middle.update_data(center_points)
+        motor_right.update_data(right_points)
 
-        for point in right_points:
-            if point[0].distance <= thresh_dist:
-                object_right = True
-                break
-            object_right = False
-        
-        for point in center_points:
-            if point[0].distance <= thresh_dist:
-                object_center = True
-                break
-            object_center = False
-
-        print('Object left? %s' % str(object_left))
-        print('Object middle? %s' % str(object_right))
-        print('Object right? %s' % str(object_right))
 except KeyboardInterrupt:
     GPIO.cleanup()
 
