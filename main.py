@@ -132,6 +132,8 @@ try:
         motor_middle.update_data(center_points)
         motor_right.update_data(right_points)
 
+        print(motor_left.points)
+
 except KeyboardInterrupt:
     GPIO.cleanup()
 
