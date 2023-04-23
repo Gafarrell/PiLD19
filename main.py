@@ -36,6 +36,7 @@ class VibrationMotorRangeLink:
         string = ""
         for key in self.points.keys():
             string += "{key}: {point}\n".format(key=key, point=self.points[key])
+        return string
 
 class DataPoint:
 
