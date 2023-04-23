@@ -120,7 +120,6 @@ GPIO.setmode(GPIO.BCM)
 
 try:
 
-
     # CHANGE THESE TO THE CORRECT PINS WHEN THEY ARE ACTUALLY CONNECTED.
     motor_left = VibrationMotorRangeLink(4, 50, "Left", 210, 250)
     motor_middle = VibrationMotorRangeLink(5, 50, "Middle", 250, 290)
@@ -134,8 +133,6 @@ try:
         motor_left.update_data(frame.get_points_and_angles())
         motor_middle.update_data(frame.get_points_and_angles())
         motor_right.update_data(frame.get_points_and_angles())
-
-        print(motor_left)
 
 except KeyboardInterrupt:
     GPIO.cleanup()
