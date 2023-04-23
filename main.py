@@ -23,7 +23,7 @@ class VibrationMotorLink:
             return
         
         self._active = object_detected
-        print('%d vibration motor %s' % ("Activating" if self._active else "Deactivating", self._name))
+        print('%s vibration motor %s' % ("Activating" if self._active else "Deactivating", self._name))
 
 class DataPoint:
 
