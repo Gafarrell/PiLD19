@@ -14,7 +14,7 @@ class VibrationMotorRangeLink:
 
     def update_data(self, data_points):
         for point in data_points:
-            if point[1] in self.points:
+            if int(point[1]) in self.points:
                 self.points[point[1]] = point[0]
         
         object_detected = False
@@ -131,14 +131,9 @@ try:
     while True:
         frame = LidarFrame()
 
-        #The overall angle coverage is between 210 and 330 degrees
-        left_points = frame.get_points_within_angles(210, 250)
-        center_points  = frame.get_points_within_angles(251, 290)
-        right_points  = frame.get_points_within_angles(291, 330)
-
-        motor_left.update_data(left_points)
-        motor_middle.update_data(center_points)
-        motor_right.update_data(right_points)
+        motor_left.update_data(frame)
+        motor_middle.update_data(frame)
+        motor_right.update_data(frame)
 
         print(motor_left)
 
