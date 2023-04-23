@@ -94,15 +94,18 @@ class LidarFrame:
         
         for i in range(len(self.data_points)):
             angle = (self.start_angle + (step*i)) % 360
-            tuples.append([self.data_points[i], angle])
+            tuples.append([self.data_points[i], int(angle)])
         
         return tuples
+
+    
 
 # Starts GPIO pin #4 with constant output.
 GPIO.setmode(GPIO.BCM)
 # Do the same setup for all other GPIO pins that are supposed to be used.
 
 try:
+
 
     # CHANGE THESE TO THE CORRECT PINS WHEN THEY ARE ACTUALLY CONNECTED.
     motor_left = VibrationMotorLink(4, 50, "Left")
@@ -112,6 +115,7 @@ try:
     
     # Main program loop here.
     while True:
+        sleep(1)
         frame = LidarFrame()
         
         #The overall angle coverage is between 210 and 330 degrees
