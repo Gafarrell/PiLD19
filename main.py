@@ -6,7 +6,7 @@ port = serial.Serial('/dev/serial0', baudrate=230400, timeout=3.0, parity='N', s
 
 class VibrationMotorLink:
     def __init__(self, port, threshold, name):
-        GPIO.setup(port, GPIO.OUT)
+        #GPIO.setup(port, GPIO.OUT)
         self._active = False
         self._threshold = threshold
         self._name = name
@@ -100,8 +100,6 @@ class LidarFrame:
 
 # Starts GPIO pin #4 with constant output.
 GPIO.setmode(GPIO.BCM)
-
-GPIO.setup(4, GPIO.OUT)
 # Do the same setup for all other GPIO pins that are supposed to be used.
 
 try:
