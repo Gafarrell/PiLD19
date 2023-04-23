@@ -32,6 +32,11 @@ class VibrationMotorRangeLink:
         self._active = object_detected
         print('%s vibration motor %s' % ("Activating" if self._active else "Deactivating", self._name))
 
+    def __str__(self) -> str:
+        string = ""
+        for key in self.points.keys():
+            string += "%d: %d\n" % (key, self.points[key])
+
 class DataPoint:
 
     def __init__(self):
@@ -41,6 +46,8 @@ class DataPoint:
     def print(self):
         print('\tDistance: %d, Intensity: %d' % (self.distance, self.intensity))
 
+    def __str__(self) -> str:
+        return "(%f, %f)" % self.distance, self.intensity
 
 class LidarFrame:
 
@@ -132,7 +139,7 @@ try:
         motor_middle.update_data(center_points)
         motor_right.update_data(right_points)
 
-        print(motor_left.points)
+        print(motor_left)
 
 except KeyboardInterrupt:
     GPIO.cleanup()
