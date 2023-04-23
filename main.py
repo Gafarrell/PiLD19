@@ -19,6 +19,8 @@ class VibrationMotorRangeLink:
         
         object_detected = False
         for point in self.points.values():
+            if point == None:
+                continue
             if point.distance <= self._threshold:
                 object_detected = True
                 break
@@ -120,7 +122,7 @@ try:
     # Main program loop here.
     while True:
         frame = LidarFrame()
-        
+
         #The overall angle coverage is between 210 and 330 degrees
         left_points = frame.get_points_within_angles(210, 250)
         center_points  = frame.get_points_within_angles(251, 290)
