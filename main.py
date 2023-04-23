@@ -48,7 +48,7 @@ class DataPoint:
         print('\tDistance: %d, Intensity: %d' % (self.distance, self.intensity))
 
     def __str__(self) -> str:
-        return "(%f, %f)" % self.distance, self.intensity
+        return "(%f, %f)" % (self.distance, self.intensity)
 
 class LidarFrame:
 
