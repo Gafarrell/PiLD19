@@ -4,17 +4,22 @@ import RPi.GPIO as GPIO
 
 port = serial.Serial('/dev/serial0', baudrate=230400, timeout=3.0, parity='N', stopbits=1)
 
-class VibrationMotorLink:
-    def __init__(self, port, threshold, name):
+class VibrationMotorRangeLink:
+    def __init__(self, port, threshold, name, start, end):
         #GPIO.setup(port, GPIO.OUT)
         self._active = False
         self._threshold = threshold
         self._name = name
+        self.points = dict.fromkeys(range(start, end))
 
     def update_data(self, data_points):
-        object_detected = False
         for point in data_points:
-            if point[0].distance <= self._threshold:
+            if point[1] in self.points:
+                self.points[point[1]] = point[0]
+        
+        object_detected = False
+        for point in self.points.values():
+            if point.distance <= self._threshold:
                 object_detected = True
                 break
             object_detected = False
@@ -98,7 +103,6 @@ class LidarFrame:
         
         return tuples
 
-    
 
 # Starts GPIO pin #4 with constant output.
 GPIO.setmode(GPIO.BCM)
@@ -108,14 +112,13 @@ try:
 
 
     # CHANGE THESE TO THE CORRECT PINS WHEN THEY ARE ACTUALLY CONNECTED.
-    motor_left = VibrationMotorLink(4, 50, "Left")
-    motor_middle = VibrationMotorLink(5, 50, "Middle")
-    motor_right = VibrationMotorLink(6, 50, "Right")
+    motor_left = VibrationMotorRangeLink(4, 50, "Left", 210, 250)
+    motor_middle = VibrationMotorRangeLink(5, 50, "Middle", 250, 290)
+    motor_right = VibrationMotorRangeLink(6, 50, "Right", 290, 330)
     
     
     # Main program loop here.
     while True:
-        sleep(1)
         frame = LidarFrame()
         
         #The overall angle coverage is between 210 and 330 degrees
