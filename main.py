@@ -2,11 +2,13 @@ import serial
 from time import *
 import RPi.GPIO as GPIO
 
+GPIO.setmode(GPIO.BCM)
 port = serial.Serial('/dev/serial0', baudrate=230400, timeout=3.0, parity='N', stopbits=1)
 
 class VibrationMotorRangeLink:
     def __init__(self, port, threshold, name, start, end):
-        #GPIO.setup(port, GPIO.OUT)
+        self._port = port
+        GPIO.setup(port, GPIO.OUT)
         self._active = False
         self._threshold = threshold
         self._name = name
@@ -29,8 +31,10 @@ class VibrationMotorRangeLink:
         if object_detected == self._active:
             return
         
+        GPIO.output(self._port, self._active)
         self._active = object_detected
         print('%s vibration motor %s' % ("Activating" if self._active else "Deactivating", self._name))
+
 
     def __str__(self) -> str:
         string = ""
@@ -114,10 +118,6 @@ class LidarFrame:
         return tuples
 
 
-# Starts GPIO pin #4 with constant output.
-GPIO.setmode(GPIO.BCM)
-# Do the same setup for all other GPIO pins that are supposed to be used.
-
 try:
 
     # CHANGE THESE TO THE CORRECT PINS WHEN THEY ARE ACTUALLY CONNECTED.
@@ -125,15 +125,18 @@ try:
     motor_middle = VibrationMotorRangeLink(5, 50, "Middle", 250, 290)
     motor_right = VibrationMotorRangeLink(6, 50, "Right", 290, 330)
     
-    
+    button_pin = 7
+    GPIO.setup(button_pin, GPIO.INPUT)
+
     # Main program loop here.
     while True:
-        frame = LidarFrame()
+        if (GPIO.input(button_pin)) == GPIO.HIGH:
+            frame = LidarFrame()
 
-        motor_left.update_data(frame.get_points_and_angles())
-        motor_middle.update_data(frame.get_points_and_angles())
-        motor_right.update_data(frame.get_points_and_angles())
+            motor_left.update_data(frame.get_points_and_angles())
+            motor_middle.update_data(frame.get_points_and_angles())
+            motor_right.update_data(frame.get_points_and_angles())
 
 except KeyboardInterrupt:
     GPIO.cleanup()
-
+    
